@@ -1,0 +1,70 @@
+﻿.unpad {
+    padding: unset;
+}
+
+.tempo-slider-container {
+    width: 100%;
+    padding-top: 15px;
+    display: inline-block;
+}
+
+/* Use ID to override bootstrap */
+#tempo-slider {
+    display: inline;
+}
+
+.tempo-slider {
+    float: none;
+}
+
+.metronome {
+    width: 50px;
+    height: 225px;
+    margin: 0;
+    background-color: brown;
+}
+
+.pendulum-crossbar {
+    width: 50px;
+    top: 165px;
+    position: absolute;
+    text-align: center;
+}
+
+.pendulum-grandparent {
+    display: inline-block;
+}
+
+.pendulum-child {
+    width: 36px;
+    height: 210px;
+    background-image: url(/Content/Images/pendulum.png);
+    position: absolute;
+    background-size: contain;
+    left: -12px;
+    top: -160px;
+}
+
+.pendulum-parent {
+    width: 11px;
+    height: 11px;
+    display: none;
+}
+
+.tempo {
+    width: 3em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+}
+
+.minutes {
+    width: 2em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+}
+
+.duration {
+    width: 3em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+}

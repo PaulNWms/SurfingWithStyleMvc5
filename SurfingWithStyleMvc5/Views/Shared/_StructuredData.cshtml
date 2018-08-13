@@ -1,0 +1,23 @@
+﻿@{ 
+    ViewBag.Uri = new Uri(Request.Url.AbsoluteUri);
+    ViewBag.RootUrl = ViewBag.Uri.GetLeftPart(UriPartial.Authority);
+}
+    <meta itemscope itemprop="mainEntityOfPage" itemType="https://schema.org/WebPage" itemid="@Request.Url.AbsoluteUri" />
+    <meta itemprop="name" content="@ViewBag.Title" />
+    <meta itemprop="url" content="@Request.Url.AbsoluteUri" />
+    <span itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
+        <meta itemprop="url" content="@ViewBag.RootUrl/Content/Images/surfboard-woody-424.jpg" />
+        <meta itemprop="width" content="424" />
+        <meta itemprop="height" content="256" />
+    </span>
+    <span itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop="name" content="Troll">
+        <span itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop="url" content="@ViewBag.RootUrl/Content/Images/Troll.jpg" />
+        </span>
+    </span>
+    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <meta itemprop="name" content="Troll" />
+    </span>
+    <meta itemprop="datePublished" content="@ViewBag.FileCreated" />
+    <meta itemprop="dateModified" content="@ViewBag.FileModified" />

@@ -1,0 +1,174 @@
+﻿@model SurfingWithStyleMvc5.ViewModels.MetronomeViewModel
+
+@{
+    ViewBag.Title = "Accelerating Metronome";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/TimerLib")
+    @Scripts.Render("~/bundles/Metronome")
+}
+
+@section head {
+<meta charset="utf-8">
+<meta name="description" content="A metronome that follows a preprogrammed schedule." />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="Stylesheet" href="~/Content/MiniMetronome.css" type="text/css" />
+<style>
+    /* IE has layout issues when sorting (see #5413) */
+    .group {
+        zoom: 1;
+    }
+</style>
+
+<script src="//code.jquery.com/jquery-1.12.3.min.js" integrity="sha384-ugqypGWrzPLdx2zEQTF17cVktjb01piRKaDNnbYGRSxyEoeAm+MKZVtbDUYjxfZ6" crossorigin="anonymous"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha384-YWP9O4NjmcGo4oEJFXvvYSEzuHIvey+LbXkBNJ1Kd0yfugEZN9NCQNpRYBVC1RvA" crossorigin="anonymous"></script>
+<script src="//www.gstatic.com/charts/loader.js" integrity="sha384-DffoYFrhiTXZiSmhbOqgKaVm1aI1rmiK4UXHeVMgFOWBzNdO6tXjTukQxrt08Jqo" crossorigin="anonymous"></script>
+<script>
+    $(function () {
+        $("#accordion")
+          .accordion({
+              header: "> div > h3"
+          })
+          .sortable({
+              axis: "y",
+              handle: "h3",
+              stop: function (event, ui) {
+                  // IE doesn't register the blur when sorting
+                  // so trigger focusout handlers to remove .ui-state-focus
+                  ui.item.children("h3").triggerHandler("focusout");
+
+                  // Refresh accordion to handle new order
+                  $(this).accordion("refresh");
+              }
+          });
+    });
+</script>
+}
+
+<article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebApplication">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <meta itemprop="applicationCategory" content="Tool, Multimedia" />
+    <meta itemprop="applicationSubCategory" content="Music Rehearsal" />
+    <meta itemprop="operatingSystem" content="IIS/ASP.NET MVC" />
+    <h2>Accelerating Metronome</h2>
+    <div class="row">
+        <div class="col-xs-9 jumbotron text-center">
+            <div class="row">
+                <h1>
+                    <button type="button" class="btn btn-primary btn-lg timer-start"><span class="glyphicon glyphicon-play"></span></button>
+                    <span class="tempo-display">120</span>
+                </h1>
+            </div>
+            <div class="row">
+                <h2 class="col-xs-3">
+                    <span class="timer-display">0:00</span>
+                </h2>
+                <h2 class="col-xs-9">
+                    <span class="exercise-display"></span>
+                </h2>
+            </div>
+        </div>
+        <div class="col-xs-offset-1 col-xs-2">
+            <div class="metronome">
+                <div class="pendulum-crossbar">
+                    <div class="pendulum-grandparent">
+                        <div class="pendulum-parent">
+                            <div class="pendulum-child"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-9">
+            <div class="linechart_material" style="height: 250px"></div>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Schedule:</h3>
+    </div>
+    <div class="row">
+        <form class="form-inline" method="post">
+            <div id="accordion" class="schedule">
+                @for (int i = 0; i < Model.Rows.Count(); i++)
+                {
+                <div class="group form-group col-xs-9">
+                    <h3>
+                        <button type="button" class="btn btn-primary delete-form-row" style="margin-top:0.2em;margin-right:0.2em"><span class="glyphicon glyphicon-remove"></span></button>
+                        @Html.TextBoxFor(m => m.Rows[i].Exercise, new { @style = "margin-top:0.2em;margin-right:0.2em", @class = "form-control exercise", @placeholder = "Exercise" })
+                        <button type="button" class="btn btn-primary add-accelerating-row" style="margin-top:0.2em"><span class="glyphicon glyphicon-plus"></span></button>
+                    </h3>
+                    <div>
+                        @Html.TextBoxFor(m => m.Rows[i].Tempo[0], new { @style = "width:3em;margin-top:0.2em;margin-right:0.2em;padding-left:0.3em;padding-right:0.3em", @class = "form-control digit-filter tempo tempo-0", @placeholder = "T0", @autocomplete = "off" })
+                        <input type="text" style="width:3.5em;margin-top:0.2em;margin-right:0.2em;padding-left:0.5em;padding-right:0.5em" class="form-control time-filter midpoint-0" id="midpoint-0" placeholder="D1" autocomplete="off" />
+                        @Html.HiddenFor(m => m.Rows[i].Seconds[0], new { @class = "midpoint-0-sec" })
+
+                        <input autocomplete="off" class="form-control digit-filter tempo tempo-1" placeholder="T1" style="width:3em;margin-top:0.2em;margin-right:0.2em;padding-left:0.3em;padding-right:0.3em" type="text" />
+                        <input type="text" style="width:3.5em;margin-top:0.2em;margin-right:0.2em;padding-left:0.5em;padding-right:0.5em" class="form-control time-filter midpoint-1" id="midpoint-1" placeholder="D1" autocomplete="off" />
+                        <input class="midpoint-1-sec" type="hidden" />
+
+                        <input autocomplete="off" class="form-control digit-filter tempo tempo-2" placeholder="T2" style="width:3em;margin-top:0.2em;margin-right:0.2em;padding-left:0.3em;padding-right:0.3em" type="text" />
+                        <input type="text" style="width:3.5em;margin-top:0.2em;margin-right:0.2em;padding-left:0.5em;padding-right:0.5em" class="form-control time-filter midpoint-2" id="midpoint-2" placeholder="D2" autocomplete="off" />
+                        <input class="midpoint-2-sec" type="hidden" />
+
+                        <input autocomplete="off" class="form-control digit-filter tempo tempo-3" placeholder="T3" style="width:3em;margin-top:0.2em;margin-right:0.2em;padding-left:0.3em;padding-right:0.3em" type="text" />
+                        <input type="text" style="width:3.5em;margin-top:0.2em;margin-right:0.2em;padding-left:0.5em;padding-right:0.5em" class="form-control time-filter midpoint-3" id="midpoint-3" placeholder="D3" autocomplete="off" />
+                        <input class="midpoint-3-sec" type="hidden" />
+
+                        <input autocomplete="off" class="form-control digit-filter tempo tempo-4" placeholder="T4" style="width:3em;margin-top:0.2em;margin-right:0.2em;padding-left:0.3em;padding-right:0.3em" type="text" />
+                        <input type="text" style="width:3.5em;margin-top:0.2em;margin-right:0.2em;padding-left:0.5em;padding-right:0.5em" class="form-control time-filter midpoint-4" id="midpoint-4" placeholder="D4" autocomplete="off" />
+                        <input class="midpoint-4-sec" type="hidden" />
+                    </div>
+                </div>
+                }
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-offset-1 col-xs-10">
+                    @Html.LabelFor(m => m.Rest)
+                    @Html.TextBoxFor(m => m.Rest, new { @style = "width:3em;margin-top:0.2em;padding-left=0.3em;padding-right=0.3em;", @class = "form-control digit-filter rest", @id = "rest", @placeholder = "5", @autocomplete = "off" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-offset-1 col-xs-10">
+                    @Html.LabelFor(m => m.StartRoutineWithRest)
+                    @Html.CheckBoxFor(m => m.StartRoutineWithRest, new { @class = "start-with-rest" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-offset-1 col-xs-10">
+                    @Html.LabelFor(m => m.EndExerciseWithBell)
+                    @Html.CheckBoxFor(m => m.EndExerciseWithBell, new { @class = "end-with-bell" })
+                </div>
+            </div>
+            <div class="row col-xs-offset-1 col-xs-10">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default" style="margin-top:0.2em;margin-right:0.2em">Create Link</button>
+                </div>
+            </div>
+            <input type="hidden" name="query" class="query" id="query" />
+        </form>
+    </div>
+    <div class="row">
+        <audio class="downbeat-click" preload="auto">
+            <source src="~/Content/Audio/downbeatClick.wav" type="audio/wav">
+            <source src="~/Content/Audio/downbeatClick.mp3" type="audio/mp3">
+        </audio>
+        <audio class="upbeat-click" preload="auto">
+            <source src="~/Content/Audio/upbeatClick.wav" type="audio/wav">
+            <source src="~/Content/Audio/upbeatClick.mp3" type="audio/mp3">
+        </audio>
+        <audio class="end-exercise-bell" preload="auto">
+            <source src="~/Content/Audio/EndExercise.wav" type="audio/wav">
+            <source src="~/Content/Audio/EndExercise.mp3" type="audio/mp3">
+        </audio>
+        <audio class="end-routine-bell" preload="auto">
+            <source src="~/Content/Audio/EndRoutine.wav" type="audio/wav">
+            <source src="~/Content/Audio/EndRoutine.mp3" type="audio/mp3">
+        </audio>
+    </div>
+</article>

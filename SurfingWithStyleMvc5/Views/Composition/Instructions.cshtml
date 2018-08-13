@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = "View";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+<article class="instructions" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Article">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <h1 class="cover-heading" itemprop="headline">Instructions for the Composition Tools</h1>
+    <div class="row">
+        <div class="col-xs-6">
+            <h2>The case for writing music the old-fashioned way</h2>
+
+            <p>
+                For several years now, software has been available that writes part or all of a composition.  Give it a few parameters like tempo, key and genre,
+                hit Generate, and presto! - a new tune is born.  The output from these programs can be quite impressive.  It's generally palatable and consistent,
+                and sounds good when played back through a quality sound card, but probably not a hit single.
+            </p>
+
+            <p>
+                Of course, automation comes at an obvious cost - the "composer" has very little artistic control over the composition process and end result.
+                Also he doesn't learn very much from it.  Operating an expert system does not make one an expert.  At some point you have to get your hands dirty,
+                and in so doing, you get better at it.
+            </p>
+
+            <p>
+                In the same way that photography didn't replace the painter, composition software doesn't replace the composer.  Artistic thought does not lend
+                itself to automation, the concept doesn't even make sense.  Art is simply a lot of work.
+            </p>
+
+            <p>
+                All of that being said, music software can <em>really</em> help streamline the creative process.
+            </p>
+
+            <h2>Where do musical ideas come from?</h2>
+
+            <p>
+                There are several approaches to composition, which can be categorized by which element starts the process.  You can start with lyrics, which in
+                turn implies a rhythm, and the other elements gradually fall into place.  Or if there are no vocals, you can start with a drum rhythm, or an
+                instrumental riff.  You can start with the harmony, as in a chorale, or you can use a "canned" progression, such as in 12-bar blues.  Probably the
+                most abstract starting point is the melody.  The approach chosen in the beginning tends to affect how the composition turns out.
+            </p>
+
+            <p>
+                One method of generating new ideas is to sit down with a guitar and start noodling. Do this for a little while, and riffs will naturally
+                just happen.  The act of fidgeting with a guitar generates random musical events which, given enough time, will <em>germinate</em> into riffs.
+                Natural curiousity will drive you to explore things that sound good.  This effect happens to some degree with all instruments, but guitars seem 
+                to be exceptionally well suited for riff-based composition.
+            </p>
+
+            <p>
+                The Germinator and Incubator are tools that work in a similar way to help come up with <em>melodic</em> ideas.
+            </p>
+
+            <h2>The Germinator</h2>
+
+            <p>
+                Most musicians are pretty good at taking an existing idea and improving on it.  But sometimes when staring at a blank sheet of music paper,
+                writer's block can be a problem.
+            </p>
+
+            <p>
+                The Germinater is a simple trick to get the ball rolling.  Basically you take a short bit of prose, and the letters and numbers are translated to musical notes
+                using a simple cipher.  This is pretty easy to do by hand, but it goes much faster to let the computer do it.  Then you can play the melodic phrase back
+                (in most browsers) to preview it, and make adjustments to taste, or just start over.  The Germinator helps you experiment quickly.
+            </p>
+
+            <p>
+                The Germinator generates melodic content only, i.e. notes.  All the notes have the same duration on playback.  Giving it an iteresting rythm is up to you.
+                (C'mon, at some point you should start feeling creative...)
+            </p>
+
+            <p>
+                There are basically two ways to use the Germinator.  The first is to give it a fairly long seed phrase, such as "lopsided alopecia", which will result
+                in a long melodic phrase.  If that one's not working for you, try something else.  Rinse and repeat until you find one that sounds like it has some
+                potential.
+            </p>
+
+            <p>
+                Melodies generated from random phrases tend to be jagged, so often you'll want to insert some passing tones to smooth things out.  Usually I like to do
+                that later on, either on an instrument or in composition software.  But if you want to make some adjustments right inside the Germinator, insert a
+                number (1-9) into your seed value.  The numbers correspond to scale degrees (in diatonic modes).
+            </p>
+
+            <p>
+                Once you've got a rough melodic phrase, it can now be analyzed and voiced down in the usual ways.  What chords does the melody imply?  What harmonic
+                rhythm is implied?  Or, if you're given a harmony, how can the melody be sledge-hammered onto it by adjusting the note durations, or adding or
+                removing notes?  At this point, you have a melody (sort of) and you're up and composing.  The tool has served its purpose.
+            </p>
+        </div>
+        <div class="col-xs-6">
+            <p>
+                The second way to use the Germinator is give it a short seed value of about 4 letters, like "bald", to create a short motive or motive fragment, also
+                called a <em>germ</em>, and feed it to the Incubator.
+            </p>
+
+            <h2>The Incubator</h2>
+
+            <p>
+                The Incubator is a tool to create variations on germs or short motives.  There are several common types of variation, most of them require some sort of manual
+                changing or rearrangement.  But a few common ones can be computed directly, which is what the incubator does.
+            </p>
+
+            <ul>
+                <li>
+                    Smooth sequences - the tool generates a number of sequences, which are ranked by their "smoothness".  The more notes a sequence has in common with the original
+                    germ, the higher the ranking.  This is the most useful function of the Incubator.
+                </li>
+                <li>Retrograde - the notes are reversed</li>
+                <li>Inverse - the notes are inverted within a diatonic scale, i.e. thirds are replaced sixths etc.</li>
+                <li>
+                    Chromatic inverse - the notes are "mirrored" chromatically with respect to a "drone" note.  For example, in the key of Cm with a drone note of C, an Eb (3
+                    semitones above the drone note) would invert to an A (3 semitones below the drone note).
+                </li>
+                <li>
+                    Sum tones and difference tones - these are tones produced by a ring modulator, which where the term "drone" came from.  A sum tone is the frequency of
+                    the drone note plus the frequency the germ note; a difference tones is the difference between the two.  Sum tones and difference tones are typically outside of
+                    the tempered scale.  Difference tones can be very low frequency and not playable - if the germ note is the same as the drone, the difference tone is 0 Hz!  These
+                    usually aren't too useful for composition, they were just thrown in for fun.
+                </li>
+            </ul>
+            <p>
+                For completenes, it should be pointed out that there are fourteen common methods of motive variation.  They are: repetition, sequence, interval change,
+                rhythm change, fragmentation, extension, expansion, compression, inversion, interversion, diminution, augmentation, ornamentation and thinning.  Of these, the
+                Incubator only helps with <em>sequence</em> and <em>inversion</em>.  There is quite a bit that the Incubator is <em>not</em>.
+            </p>
+        </div>
+    </div>
+</article>

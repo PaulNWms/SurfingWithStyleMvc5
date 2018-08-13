@@ -1,0 +1,230 @@
+﻿@model SurfingWithStyleMvc5.ViewModels.CompositionViewModel
+@{
+    ViewBag.Title = "Germinator";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/MIDI");
+}
+
+@section head {
+    <meta name="description" content="Germinator, a tool for inventing short musical phrases (motives)" />
+}
+
+<article class="narrow-article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebApplication">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <meta itemprop="applicationCategory" content="Tool, Multimedia" />
+    <meta itemprop="applicationSubCategory" content="Musical Composition" />
+    <meta itemprop="operatingSystem" content="IIS/ASP.NET MVC" />
+    <h2>Germinator</h2>
+    <h3>A tool for inventing short musical phrases (motives)</h3>
+
+    <p>
+        Enter a word or a few random letters to generate a phrase, then hit Germinate.
+        The letters will be converted to musical notes, which can be played back.
+    </p>
+
+    <div class="jumbotron text-center">
+        <h1>
+            <button type="button" class="btn btn-primary btn-lg play" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+            <span class="germ-display" />
+        </h1>
+    </div>
+
+    @using (Html.BeginForm("Incubator", "Composition", FormMethod.Post, new { role = "form" }))
+    {
+        <label for="seed">Seed</label>
+            <div class="form-group form-inline">
+                <input type="text" class="form-control" id="seed" name="seed" placeholder="Seed">
+                <button type="button" class="btn btn-default" id="btnGerminate" name="Command" value="Germinate">Germinate</button>
+                <button type="submit" class="btn btn-default" id="btnProceed" name="Command" value="Proceed">Proceed to Incubator</button>
+            </div>
+            <div class="form-group">
+                <label for="key" class="control-label input-group">Key</label>
+                <div id="piano">
+                    <ul id="piano-container">
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Key, "C", new { @class = "whiteKeyRB", @checked = "checked" }) <span class="whiteKeyText">C</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Key, "C#", new { @class = "blackKeyRB" }) <span class="blackKeyText">C#/Db</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Key, "D", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">D</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Key, "Eb", new { @class = "blackKeyRB" }) <span class="blackKeyText">D#/Eb</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Key, "E", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">E</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Key, "F", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">F</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Key, "F#", new { @class = "blackKeyRB" }) <span class="blackKeyText">F#/Gb</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Key, "G", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">G</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Key, "Ab", new { @class = "blackKeyRB" }) <span class="blackKeyText">G#/Ab</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Key, "A", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">A</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Key, "Bb", new { @class = "blackKeyRB" }) <span class="blackKeyText">A#/Bb</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Key, "B", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">B</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group mode-container">
+                <label for="mode" class="control-label input-group">Mode</label>
+                <div class="btn-group">
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Major") Major
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Dorian") Dorian
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Phrygian") Phrygian
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Lydian") Lydian
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Mixolydian") Mixolydian
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Minor") Minor
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Locrian") Locrian
+                    </label>
+                </div>
+                <div class="row"></div>
+                <div class="btn-group">
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "MajorPentatonic") Major Pentatonic
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "MajorBlues") Major Blues
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "MinorPentatonic") Minor Pentatonic
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "MinorBlues") Minor Blues
+                    </label>
+                </div>
+                <div class="row"></div>
+                <div class="btn-group">
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Whole") Whole Tone
+                    </label>
+                    <label class="radio-inline">
+                        @Html.RadioButtonFor(m => m.Mode, "Diminished") Diminished
+                    </label>
+                </div>
+            </div>
+            <br class="germ" data-germ="" />
+            @Html.HiddenFor(m => m.GermJson, new { @class = "germ-json" })
+    }
+</article>
+
+
+<script type="text/javascript">
+
+    function parseHexString(str) {
+        var result = [];
+        while (str.length >= 2) {
+            result.push(parseInt(str.substring(0, 2), 16));
+            str = str.substring(2, str.length);
+        }
+
+        return result;
+    }
+
+    function toHexStr(i) {
+        return (i+0x100).toString(16).substr(-2).toUpperCase();
+    }
+
+    window.onload = function () {
+        MIDI.loadPlugin({
+            soundfontUrl: "@Url.Content("~/Scripts/MIDI/examples/soundfont/")",
+            instrument: "acoustic_grand_piano",
+            onprogress: function (state, progress) {
+                console.log(state, progress);
+            },
+            onsuccess: function () {
+                $(".play").removeAttr('disabled');
+            }
+        });
+
+        $(".play").click(function () {
+            var midiStr = $(".germ").attr("data-germ");
+            var notes = parseHexString(midiStr);
+            var delay = 0;
+            var velocity = 127;
+
+            for (var i = 0; i < notes.length; i++) {
+                var note = notes[i];
+                MIDI.setVolume(0, 127);
+                MIDI.noteOn(0, note, velocity, delay);
+                delay += 0.75
+                MIDI.noteOff(0, note, delay);
+            }
+        });
+
+        $("#btnGerminate").click(function () {
+            var keyVal = $("input[name=Key]:checked").attr("value");
+            var modeVal = $("input[name=Mode]:checked").attr("value");
+            var seedVal = $("#seed").val();
+            $.ajax({
+                url: "@Url.Content("~/api/germinate")",
+                data: {
+                    key: keyVal,
+                    mode: modeVal,
+                    seed: seedVal
+                },
+                success: function (result) {
+                    var germDisplay = "";
+                    var germMidi = "";
+                    var germJson = JSON.stringify(result);
+                    for (var i in result) {
+                        if (i > 0) {
+                            germDisplay += " ";
+                        }
+                        germDisplay += result[i].Name;
+                        germMidi += toHexStr(result[i].Midi);
+                    }
+                    $(".germ-display").html(germDisplay);
+                    $(".germ").attr("data-germ", germMidi);
+                    $(".germ-json").val(germJson);
+                }
+            });
+        });
+    };
+
+</script>

@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Tic-Tac-Toe";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Tic-Tac-Toe");
+}
+
+@section head {
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Tic-Tac-Toe / Naughts and Crosses" />
+}
+
+<article class="narrow-article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebApplication">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <meta itemprop="applicationCategory" content="Game, Multimedia" />
+    <meta itemprop="applicationSubCategory" content="Strategy" />
+    <meta itemprop="operatingSystem" content="IIS/ASP.NET MVC" />
+
+    <div class="row">
+        <div class="col-sm-offset-3 col-sm-6">
+            <h2>@ViewBag.Title</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="svg-parent col-sm-offset-3 col-sm-6">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 style="width:100%;height:100%;"
+                 viewBox="0 0 300 300"
+                 preserveAspectRatio="xMidYMid slice">
+                <rect x="0" y="0" width="300" height="300" style="fill: #000000"></rect>
+                <line x1="100" y1="0" x2="100" y2="300" style="stroke: #ffffff; stroke-width:3"></line>
+                <line x1="200" y1="0" x2="200" y2="300" style="stroke: #ffffff; stroke-width:3"></line>
+                <line x1="0" y1="100" x2="300" y2="100" style="stroke: #ffffff; stroke-width:3"></line>
+                <line x1="0" y1="200" x2="300" y2="200" style="stroke: #ffffff; stroke-width:3"></line>
+            </svg>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-offset-3 col-sm-6">
+            <button type="button" class="reset btn btn-primary btn-lg" data-toggle="modal">Reset</button>
+        </div>
+    </div>
+
+    <div class="gameover modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Game Over</h4>
+                </div>
+                <div class="gameover-body modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-primary" data-dismiss="modal">Acknowledge</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="thinking modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Thinking...
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

@@ -1,0 +1,635 @@
+﻿@{
+    ViewBag.Title = "The Sloppy Rosetta Stone";
+}
+
+@section head {
+<style>
+    .ui-tooltip {
+        padding: 8px;
+        position: absolute;
+        z-index: 9999;
+        max-width: 300px;
+        -webkit-box-shadow: 0 0 5px #aaa;
+        box-shadow: 0 0 5px #aaa;
+        background-color: antiquewhite;
+        color: black;
+    }
+
+    body .ui-tooltip {
+        border-width: 2px;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    div {
+    }
+</style>
+}
+
+@section scripts {
+    @Scripts.Render("~/Scripts/jquery-ui-1.11.4.min.js");
+<script>
+    $(function () {
+        $(document).tooltip({
+            content: function () {
+                return $(this).attr('title');
+            },
+            position: {
+                my: "bottom",
+                at: "top"
+            }
+        });
+    });
+</script>
+}
+
+<h2>The Sloppy Rosetta Stone</h2>
+<p>Mouse over any empty cell to bring up a tooltip.  (The table is too big to print it all out.)</p>
+<br />
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th colspan="8">Code Organization</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+    </thead>
+    <tbody class="table-striped">
+        <tr>
+            <td>Include file</td>
+            <td title="<code>#include &quot;file&quot;</code> (same dir)<br />or<br /><code>#include &amp;lt;file&amp;gt;</code> (include path)"></td>
+            <td>-</td>
+            <td title="<code>include 'file';</code><br /><code>include_once 'file';</code><br /><code>require 'file';</code><br /><code>require_once 'file';</code>"></td>
+            <td title="<code>/// &amp;lt;reference path=&quot;file.ts&quot; /&amp;gt;</code><br />or<br />uses order of &lt;script/&gt; tags in HTML"></td>
+            <td title="uses build order"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Declare namespace</td>
+            <td title="<code>namespace ns { ... }</code>"></td>
+            <td title="<code>namespace ns { ... }</code>"></td>
+            <td title="<code>namespace ns;</code><br />(subsequent code is in ns)<br />or<br /><code>namespace ns { ... }</code>"></td>
+            <td title="<code>namespace ns { ... }</code>"></td>
+            <td title="<code>namespace ns</code><br />(subsequent code is in ns)"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Import / alias namespace</td>
+            <td title="<code>using namespace ns;</code>"></td>
+            <td title="<code>using ns[ = Longer.Namespace];</code>"></td>
+            <td title="<code>use Longer\Namespace\Classname as MyClass;</code>"></td>
+            <td title="<code>import ns = Longer.Namespace;</code>"></td>
+            <td title="<code>open ns</code>"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Declare module</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td title="any file containing a top-level <code>import</code> or <code>export</code> is considered a module"></td>
+            <td title="implicitly use filename<br />or<br /><code>module MyModule[ = ...]</code>"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Import module</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td title="<code>import * as lib from &quot;./file.ts&quot;;</code>"></td>
+            <td title="<code>open MyModule</code>"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th colspan="8">Basic Syntax</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+        <tr>
+            <td>Line Comment</td>
+            <td title="<code>// ...</code>"></td>
+            <td title="<code>// ...</code>"></td>
+            <td title="<code>// ...</code>, <code># ...</code>"></td>
+            <td title="<code>// ...</code>"></td>
+            <td title="<code>// ...</code>"></td>
+            <td>?</td>
+            <td title="<code>-- ...</code>"></td>
+        </tr>
+        <tr>
+            <td>Block Comment</td>
+            <td title="<code>/* ... */</code>"></td>
+            <td title="<code>/* ... */</code>"></td>
+            <td title="<code>/* ... */</code>"></td>
+            <td title="<code>/* ... */</code>"></td>
+            <td title="<code>(* ... *)</code>"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Autodocument</td>
+            <td>?</td>
+            <td title="<code>/// ...</code>"></td>
+            <td>?</td>
+            <td title="<code>/**<br />&nbsp;* ...<br />&nbsp;*/</code>"></td>
+            <td title="<code>/// ...</code>"></td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Code Block</td>
+            <td title="<code>{ ... }</code>"></td>
+            <td title="<code>{ ... }</code>"></td>
+            <td title="<code>{ ... }</code>"></td>
+            <td title="<code>{ ... }</code>"></td>
+            <td title="indentation"></td>
+            <td>?</td>
+            <td title="<code>BEGIN ... END</code>"></td>
+        </tr>
+        <tr>
+            <td>Declare Constant</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>const</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>define();</code>">?</td>
+        </tr>
+        <tr>
+            <td>Declare Variable</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>let, var</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <th colspan="8">Primitive Types</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+        <tr>
+            <td>Boolean</td>
+            <td title="char, int, etc."></td>
+            <td title="bool"></td>
+            <td title="boolean"></td>
+            <td title="boolean"></td>
+            <td title="bool"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Character</td>
+            <td title="char, wchar_t"></td>
+            <td title="char"></td>
+            <td>-</td>
+            <td>-</td>
+            <td title="char"></td>
+            <td>?</td>
+            <td title="CHAR(1), NCHAR(1) (T-SQL)"></td>
+        </tr>
+        <tr>
+            <td>Byte</td>
+            <td title="unsigned char"></td>
+            <td title="byte"></td>
+            <td>-</td>
+            <td>-</td>
+            <td title="byte"></td>
+            <td>?</td>
+            <td title="TINYINT"></td>
+        </tr>
+        <tr>
+            <td>Half-word</td>
+            <td title="short"></td>
+            <td title="short"></td>
+            <td>-</td>
+            <td>-</td>
+            <td title="int16"></td>
+            <td>?</td>
+            <td title="SMALLINT"></td>
+        </tr>
+        <tr>
+            <td>Word</td>
+            <td title="int/long (C++/CLI)"></td>
+            <td title="int"></td>
+            <td title="integer"></td>
+            <td>-</td>
+            <td title="int/int32"></td>
+            <td>?</td>
+            <td title="INT"></td>
+        </tr>
+        <tr>
+            <td>Double word</td>
+            <td title="__int64 (C++/CLI)"></td>
+            <td title="long"></td>
+            <td>-</td>
+            <td>-</td>
+            <td title="int64"></td>
+            <td>?</td>
+            <td title="BIGINT"></td>
+        </tr>
+        <tr>
+            <td>Float (32-bit)</td>
+            <td title="float"></td>
+            <td title="float"></td>
+            <td>-</td>
+            <td>-</td>
+            <td title="single/float32"></td>
+            <td>?</td>
+            <td title="REAL (T-SQL)"></td>
+        </tr>
+        <tr>
+            <td>Float (64-bit)</td>
+            <td title="double"></td>
+            <td title="double"></td>
+            <td title="float"></td>
+            <td title="number"></td>
+            <td title="double/float"></td>
+            <td>?</td>
+            <td title="FLOAT"></td>
+        </tr>
+        <tr>
+            <td>Decimal</td>
+            <td>-</td>
+            <td title="decimal"></td>
+            <td>-</td>
+            <td>-</td>
+            <td title="decimal"></td>
+            <td>?</td>
+            <td title="DECIMAL<br />T-SQL also has NUMERIC, SMALLMONEY, MONEY"></td>
+        </tr>
+        <tr>
+            <td>No Type</td>
+            <td title="void"></td>
+            <td title="void"></td>
+            <td title="void"></td>
+            <td title="any"></td>
+            <td title="unit"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Enumeration</td>
+            <td title="<code>enum keyword { ... };</code>"></td>
+            <td title="<code>enum keyword { ... };</code>"></td>
+            <td title="<code>abstract class DaysOfWeek {<br/>&nbsp;const Sunday = 0;<br/>&nbsp;const Monday = 1;<br/>&nbsp;// etc.<br/>}</code>"></td>
+            <td title="<code>enum keyword { ... };</code>"></td>
+            <td title="<code>type enum-name =<br/>&nbsp;| value1 = integer-literal1<br/>&nbsp;| value2 = integer-literal2</code>"></td>
+            <td>?</td>
+            <td title="In MYSQL:<br/><br/><code>CREATE TABLE sizes (<br/>&nbsp;name ENUM('small', 'medium', 'large')<br/>);</code><br/><br/>In SQL SERVER<br/><br/><code>CREATE TABLE sizes<br/>(<br/>&nbsp;name varchar(10) NOT NULL CHECK (name IN('small', 'medium', 'large'))<br/>)</code>"></td>
+        </tr>
+        <tr>
+            <td>String</td>
+            <td title="char[], wchar_t[], std::string"></td>
+            <td title="string"></td>
+            <td title="string"></td>
+            <td title="string"></td>
+            <td title="string"></td>
+            <td>?</td>
+            <td title="CHAR(n), VARCHAR(n), TEXT<br />T-SQL also has NCHAR, NVARCHAR, NTEXT"></td>
+        </tr>
+        <tr>
+            <th colspan="8">True, False, Null</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+        <tr>
+            <td>False</td>
+            <td title="false, 0"></td>
+            <td title="false"></td>
+            <td title="FALSE, 0, 0.0, '', '0'', NULL,<br />empty array,<br />empty SimpleXML tag"></td>
+            <td title="false, null, undefined, '', 0, NaN"></td>
+            <td title="false"></td>
+            <td>?</td>
+            <td title="result of evaluation, e.g. <code>0 = 1</code>"></td>
+        </tr>
+        <tr>
+            <td>True</td>
+            <td title="true, nonzero"></td>
+            <td title="true"></td>
+            <td title="anything not false"></td>
+            <td title="anything not false"></td>
+            <td title="true"></td>
+            <td>?</td>
+            <td title="result of evaluation, e.g. <code>1 &lt;&gt; 0</code>"></td>
+        </tr>
+        <tr>
+            <td>Null</td>
+            <td title="0"></td>
+            <td title="null"></td>
+            <td title="NULL"></td>
+            <td title="null, undefined<br/>(it's a long story)"></td>
+            <td title="null, see  AllowNullLiteral<br/>Not normally required in functional programming, used mainly for .NET interop."></td>
+            <td>?</td>
+            <td title="NULL"></td>
+        </tr>
+        <tr>
+            <th colspan="8">Arrays</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+        <tr>
+            <td>Declaration</td>
+            <td title="<code>float v[3];</code>"></td>
+            <td title="<code>double[] doubleArray = new double[5]; </code>"></td>
+            <td title="<code>$Array = array();</code>"></td>
+            <td title="<code>let list: number[];</code>"></td>
+            <td>-</td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Initialization</td>
+            <td title="<code>int v[] = { 1, 2, 3, 5 };</code>"></td>
+            <td title="<code>int[] numbers = { 10, 9, 8 };</code>"></td>
+            <td title='<code>$Array=array(1, 2, 3);</code>'></td>
+            <td title="<code>let list: number[] = [1, 2, 3];<br/>let list: Array&amp;lt;number&amp;gt; = [1, 2, 3];</code>"></td>
+            <td title="<code>let array1 = [| 1; 2; 3 |]</code>"></td>
+            <td>?</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th colspan="8">Tuples</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+        <tr>
+            <td>Declaration</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>let x: [string, number];</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <th colspan="8">Classes, Interfaces, Functions</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+        <tr>
+            <td>Declare Interface</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>interface LabelledValue {<br/>&nbsp;&nbsp;label: string;<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Declare Class</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>class Greeter {<br />&nbsp;&nbsp;greeting: string;<br />&nbsp;&nbsp;constructor(message: string) {<br />&nbsp;&nbsp;&nbsp;&nbsp;this.greeting = message;<br />&nbsp;&nbsp;}<br />&nbsp;&nbsp;greet() {<br />&nbsp;&nbsp;&nbsp;&nbsp;return &quot;Hello, &quot; + this.greeting;<br />&nbsp;&nbsp;}<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Implement Interface</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>class Clock implements ClockInterface {<br />&nbsp;&nbsp;currentTime: Date;<br />&nbsp;&nbsp;constructor(h: number, m: number) { }<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Extend Class</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>class Rhino extends Animal {<br/>&nbsp;&nbsp;constructor() { super(&quot;Rhino&quot;); }<br/>}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Named Function</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>function add(x: number, y: number): number {<br />&nbsp;&nbsp;return x + y;<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Anonymous Function</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>let myAdd = function(x: number, y: number): number { return x+y; };</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Default Parameters</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>function buildName(firstName: string, lastName: string) {<br />&nbsp;&nbsp;return firstName + &quot; &quot; + lastName;<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Optional Parameters</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>function buildName(firstName: string, lastName?: string) {<br />&nbsp;&nbsp;if (lastName)<br />&nbsp;&nbsp;&nbsp;&nbsp;return firstName + &quot; &quot; + lastName;<br />&nbsp;&nbsp;else<br />&nbsp;&nbsp;&nbsp;&nbsp;return firstName;<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Rest Parameters</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>function buildName(firstName: string, ...restOfName: string[]) {<br />&nbsp;&nbsp;return firstName + &quot; &quot; + restOfName.join(&quot; &quot;);<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Lambda Syntax</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>() => { ... }<br/>arg1 => { ... }<br/>(arg1, arg2) => { ... }</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Generics</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td title="<code>function identity&amp;lt;T&amp;gt;(arg: T): T {<br />&nbsp;&nbsp;return arg;<br />}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <th colspan="8">Flow Control</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>C++</th>
+            <th>C#</th>
+            <th>PHP</th>
+            <th>TypeScript</th>
+            <th>F#</th>
+            <th>Python</th>
+            <th>SQL</th>
+        </tr>
+        <tr>
+            <td>If</td>
+            <td title="<code>if (...) { ... }<br/>else if (...) { ... }<br/>else { ... }</code>"></td>
+            <td title="<code>if (...) { ... }<br/>else if (...) { ... }<br/>else { ... }</code>"></td>
+            <td title="<code>if (...) { ... }<br/>&lt;strong&gt;elseif&lt;/strong&gt; (...) { ... }<br/>else { ... }</code>"></td>
+            <td title="<code>if (...) { ... }<br/>else if (...) { ... }<br/>else { ... }</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Ternary Operator</td>
+            <td title="<code>condition ? expr1 : expr2</code>"></td>
+            <td title="<code>condition ? expr1 : expr2</code>"></td>
+            <td title="<code>condition ? expr1 : expr2</code>"></td>
+            <td title="<code>condition ? expr1 : expr2</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Switch</td>
+            <td title="<code>switch (...) {<br/>&nbsp;case ...:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>&nbsp;default:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>}</code>"></td>
+            <td title="<code>switch (...) {<br/>&nbsp;case ...:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>&nbsp;default:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>}</code>"></td>
+            <td title="<code>switch (...) {<br/>&nbsp;case ...:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>&nbsp;default:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>}</code>"></td>
+            <td title="<code>switch (...) {<br/>&nbsp;case ...:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>&nbsp;default:<br/>&nbsp;&nbsp;...;<br/>&nbsp;&nbsp;break;<br/>}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>While</td>
+            <td title="<code>while (...) { ... }</code>"></td>
+            <td title="<code>while (...) { ... }</code>"></td>
+            <td title="<code>while (...) { ... }</code>"></td>
+            <td title="<code>while (...) { ... }</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>Do</td>
+            <td title="<code>do { ... } while (...);</code>"></td>
+            <td title="<code>do { ... } while (...);</code>"></td>
+            <td title="<code>do { ... } while (...);</code>"></td>
+            <td title="<code>do { ... } while (...);</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>For</td>
+            <td title="<code>for (int i = 0; i < count; i++) {<br/>&nbsp;...<br/>}</code>"></td>
+            <td title="<code>for (int i = 0; i < count; i++) {<br/>&nbsp;...<br/>}</code>"></td>
+            <td title="<code>for ($i = 0; $i < $count; $i++) {<br/>&nbsp;...<br/>}</code>"></td>
+            <td title="<code>for (let i = 0; i < count; i++) {<br/>&nbsp;...<br/>}</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+        <tr>
+            <td>For Each</td>
+            <td>?</td>
+            <td title="<code>foreach (var item in items) { ... }</code>"></td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+

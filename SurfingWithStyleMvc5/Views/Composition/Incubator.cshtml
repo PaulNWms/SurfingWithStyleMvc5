@@ -1,0 +1,413 @@
+﻿@model SurfingWithStyleMvc5.ViewModels.CompositionViewModel
+@{
+    ViewBag.Title = "Incubator";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/MIDI");
+}
+
+@section head {
+    <meta name="description" content="Incubator, a tool for generating variations on short musical phrases (motives)" />
+}
+
+<article class="narrow-article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebApplication">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <meta itemprop="applicationCategory" content="Tool, Multimedia" />
+    <meta itemprop="applicationSubCategory" content="Musical Composition" />
+    <meta itemprop="operatingSystem" content="IIS/ASP.NET MVC" />
+    <h2>Incubator</h2>
+    <h3>A tool for generating variations on short musical phrases (motives)</h3>
+
+    <p>
+        Enter a few notes separated by spaces, then hit Regerminate.  Use '#' for sharp and 'b' for flat.
+        A number of variations on the phrase will be generated.
+    </p>
+
+    @using (Html.BeginForm("Incubator", "Composition", FormMethod.Post, new { role = "form" }))
+    {
+        <div class="form-group form-inline">
+            <h1>@Html.TextBoxFor(m => m.GermDisplay, new { @class = "germ-editor" })</h1>
+        </div>
+        <div class="form-group form-inline">
+            <button type="button" class="btn btn-default" id="regerminate" name="Command">Regerminate</button>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.GermDisplay)
+            <p class="data-germ" data-germ="@Html.DisplayFor(m => m.GermMidiDisplay)">
+                @if (Html.DisplayFor(m => m.GermDisplay).ToString().Length > 0)
+                {
+                    <button type="button" class="btn btn-primary btn-xs play-germ" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+                }
+                <span class="display-germ">@Model.GermDisplay</span>
+            </p>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SmoothSequences)
+            <p class="smooth-sequences">
+                @if (Model.SmoothSequences != null)
+                {
+                    using (IEnumerator<string> midiEnum = Model.SmoothSequencesMidiDisplay().GetEnumerator())
+                    {
+                        using (IEnumerator<string> displayEnum = Model.SmoothSequencesDisplay().GetEnumerator())
+                        {
+                            int i = 0;
+
+                            while (midiEnum.MoveNext() && displayEnum.MoveNext())
+                            {
+                                string classAndData = String.Format("class=\"data-sequences-{0}\" data-sequences-{0}=\"{1}\"", i, midiEnum.Current);
+                                <button type="button" class="btn btn-primary btn-xs play-sequences-@i" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+                                @displayEnum.Current<br @Html.Raw(classAndData) />
+                                i++;
+                            }
+                        }
+                    }
+                }
+            </p>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.RetrogradeDisplay)
+            <p class="data-retrograde" data-retrograde="@Html.DisplayFor(m => m.RetrogradeMidiDisplay)">
+                @if (Html.DisplayFor(m => m.RetrogradeDisplay).ToString().Length > 0)
+                {
+                    <button type="button" class="btn btn-primary btn-xs play-retrograde" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+                }
+                <span class="display-retrograde">@Model.RetrogradeDisplay</span>
+            </p>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.InverseDisplay)
+            <p class="data-inverse" data-inverse="@Html.DisplayFor(m => m.InverseMidiDisplay)">
+                @if (Html.DisplayFor(m => m.InverseDisplay).ToString().Length > 0)
+                {
+                    <button type="button" class="btn btn-primary btn-xs play-inverse" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+                }
+                <span class="display-inverse">@Model.InverseDisplay</span>
+            </p>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ChromaticInverseDisplay)
+            <p class="data-chromatic-inverse" data-chromatic-inverse="@Html.DisplayFor(m => m.ChromaticInverseMidiDisplay)">
+                @if (Html.DisplayFor(m => m.ChromaticInverseDisplay).ToString().Length > 0)
+                {
+                    <button type="button" class="btn btn-primary btn-xs play-chromatic-inverse" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+                }
+                <span class="display-chromatic-inverse">@Model.ChromaticInverseDisplay</span>
+            </p>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.SumTonesDisplay)
+            <p class="data-sum-tones" data-sum-tones="@Html.DisplayFor(m => m.SumTonesMidiDisplay)">
+                @if (Html.DisplayFor(m => m.SumTonesDisplay).ToString().Length > 0)
+                {
+                    <button type="button" class="btn btn-primary btn-xs play-sum-tones" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+                }
+                <span class="display-sum-tones">@Model.SumTonesDisplay</span>
+            </p>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.DifferenceTonesDisplay)
+            <p class="data-difference-tones" data-difference-tones="@Html.DisplayFor(m => m.DifferenceTonesMidiDisplay)">
+                @if (Html.DisplayFor(m => m.DifferenceTonesDisplay).ToString().Length > 0)
+                {
+                    <button type="button" class="btn btn-primary btn-xs play-difference-tones" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+                }
+                <span class="display-difference-tones">@Model.DifferenceTonesDisplay</span>
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="key" class="control-label input-group">Key</label>
+            <div id="piano">
+                <ul id="piano-container">
+                    <li>
+                        <label class="white">
+                            @Html.RadioButtonFor(m => m.Key, "C", new { @class = "whiteKeyRB", @checked = "checked" }) <span class="whiteKeyText">C</span>
+                        </label>
+                        <label class="black">
+                            @Html.RadioButtonFor(m => m.Key, "C#", new { @class = "blackKeyRB" }) <span class="blackKeyText">C#/Db</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="white">
+                            @Html.RadioButtonFor(m => m.Key, "D", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">D</span>
+                        </label>
+                        <label class="black">
+                            @Html.RadioButtonFor(m => m.Key, "Eb", new { @class = "blackKeyRB" }) <span class="blackKeyText">D#/Eb</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="white">
+                            @Html.RadioButtonFor(m => m.Key, "E", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">E</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="white">
+                            @Html.RadioButtonFor(m => m.Key, "F", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">F</span>
+                        </label>
+                        <label class="black">
+                            @Html.RadioButtonFor(m => m.Key, "F#", new { @class = "blackKeyRB" }) <span class="blackKeyText">F#/Gb</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="white">
+                            @Html.RadioButtonFor(m => m.Key, "G", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">G</span>
+                        </label>
+                        <label class="black">
+                            @Html.RadioButtonFor(m => m.Key, "Ab", new { @class = "blackKeyRB" }) <span class="blackKeyText">G#/Ab</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="white">
+                            @Html.RadioButtonFor(m => m.Key, "A", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">A</span>
+                        </label>
+                        <label class="black">
+                            @Html.RadioButtonFor(m => m.Key, "Bb", new { @class = "blackKeyRB" }) <span class="blackKeyText">A#/Bb</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="white">
+                            @Html.RadioButtonFor(m => m.Key, "B", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">B</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="mode" class="control-label input-group">Mode</label>
+            <div class="btn-group">
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Major") Major
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Dorian") Dorian
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Phrygian") Phrygian
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Lydian") Lydian
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Mixolydian") Mixolydian
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Minor") Minor
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Locrian") Locrian
+                </label>
+            </div>
+            <div class="row"></div>
+            <div class="btn-group">
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "MajorPentatonic") Major Pentatonic
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "MajorBlues") Major Blues
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "MinorPentatonic") Minor Pentatonic
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "MinorBlues") Minor Blues
+                </label>
+            </div>
+            <div class="row"></div>
+            <div class="btn-group">
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Whole Tone") Whole Tone
+                </label>
+                <label class="radio-inline">
+                    @Html.RadioButtonFor(m => m.Mode, "Diminished") Diminished
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="drone" class="control-label input-group">Drone</label>
+                <div id="piano">
+                    <ul id="piano-container">
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Drone, "C", new { @class = "whiteKeyRB", @checked = "checked" }) <span class="whiteKeyText">C</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Drone, "C#", new { @class = "blackKeyRB" }) <span class="blackKeyText">C#/Db</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Drone, "D", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">D</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Drone, "Eb", new { @class = "blackKeyRB" }) <span class="blackKeyText">D#/Eb</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Drone, "E", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">E</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Drone, "F", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">F</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Drone, "F#", new { @class = "blackKeyRB" }) <span class="blackKeyText">F#/Gb</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Drone, "G", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">G</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Drone, "Ab", new { @class = "blackKeyRB" }) <span class="blackKeyText">G#/Ab</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Drone, "A", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">A</span>
+                            </label>
+                            <label class="black">
+                                @Html.RadioButtonFor(m => m.Drone, "Bb", new { @class = "blackKeyRB" }) <span class="blackKeyText">A#/Bb</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="white">
+                                @Html.RadioButtonFor(m => m.Drone, "B", new { @class = "whiteKeyRB" }) <span class="whiteKeyText">B</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</article>
+
+<script type="text/javascript">
+
+    function parseHexString(str) {
+        var result = [];
+        while (str.length >= 2) {
+            result.push(parseInt(str.substring(0, 2), 16));
+            str = str.substring(2, str.length);
+        }
+        return result;
+    }
+
+    function toHexStr(i) {
+        return (i + 0x100).toString(16).substr(-2).toUpperCase();
+    }
+
+    function Populate(name, notes) {
+        var germDisplay = "";
+        var germMidi = "";
+        for (var i in notes) {
+            if (i > 0) {
+                germDisplay += " ";
+            }
+            germDisplay += notes[i].Name;
+            germMidi += toHexStr(notes[i].Midi);
+        }
+        var displayClass = ".display-".concat(name);
+        var dataAttr = "data-".concat(name);
+        var dataClass = ".".concat(dataAttr);
+        $(displayClass).html(germDisplay);
+        $(dataClass).attr(dataAttr, germMidi);
+    }
+
+    function PopulateSmoothSequences(sequences) {
+        var p = $(".smooth-sequences");
+        p.empty();
+        for (var i in sequences) {
+            var notes = sequences[i].Notes;
+            var germDisplay = "" + sequences[i].Common + ":";
+            var germMidi = "";
+            for (var j in notes) {
+                if (j > 0) {
+                    germDisplay += " ";
+                }
+                germDisplay += notes[j].Name;
+                germMidi += toHexStr(notes[j].Midi);
+            }
+            p.append('<button type="button" class="btn btn-primary btn-xs play-sequences-' + i +
+                     '"><span class="glyphicon glyphicon-play" /></button>' + germDisplay + '<br class="data-sequences-' + i +
+                     '" data-sequences-' + i + '="' + germMidi + '" />');
+        }
+
+        $("[class*='play-sequences-']").click(function () {
+            var index = this.className.indexOf("play-sequences-") + 15;
+            var dataAttr = "data-sequences-".concat(this.className.substring(index));
+            var dataClass = ".".concat(dataAttr);
+            var hexData = $(dataClass).attr(dataAttr);
+            var notes = parseHexString(hexData);
+            var delay = 0;
+            var velocity = 127;
+
+            for (var i = 0; i < notes.length; i++) {
+                var note = notes[i];
+                MIDI.setVolume(0, 127);
+                MIDI.noteOn(0, note, velocity, delay);
+                delay += 0.75
+                MIDI.noteOff(0, note, delay);
+            }
+        });
+    }
+
+    window.onload = function () {
+        MIDI.loadPlugin({
+            soundfontUrl: "@Url.Content("~/Scripts/MIDI/examples/soundfont/")",
+            instrument: "acoustic_grand_piano",
+            onprogress: function (state, progress) {
+                console.log(state, progress);
+            },
+            onsuccess: function () {
+                $("button").removeAttr('disabled');
+            }
+        });
+
+        $("[class*='play-']").click(function () {
+            var index = this.className.indexOf("play-") + 5;
+            var dataAttr = "data-".concat(this.className.substring(index));
+            var dataClass = ".".concat(dataAttr);
+            var hexData = $(dataClass).attr(dataAttr);
+            var notes = parseHexString(hexData);
+            var delay = 0;
+            var velocity = 127;
+
+            for (var i = 0; i < notes.length; i++) {
+                var note = notes[i];
+                MIDI.setVolume(0, 127);
+                MIDI.noteOn(0, note, velocity, delay);
+                delay += 0.75
+                MIDI.noteOff(0, note, delay);
+            }
+        });
+
+        $("#regerminate").click(function () {
+            var keyVal = $("input[name=Key]:checked").attr("value");
+            var modeVal = $("input[name=Mode]:checked").attr("value");
+            var droneVal = $("input[name=Drone]:checked").attr("value");
+            var noteNamesVal = $(".germ-editor").val();
+            $.ajax({
+                url: "@Url.Content("~/api/regerminate")",
+                data: {
+                    key: keyVal,
+                    mode: modeVal,
+                    noteNames: noteNamesVal,
+                    drone: droneVal
+                },
+                success: function (result) {
+                    Populate("germ", result.Notes);
+                    PopulateSmoothSequences(result.SmoothSequences);
+                    Populate("retrograde", result.Retrograde);
+                    Populate("inverse", result.Inverse);
+                    Populate("chromatic-inverse", result.ChromaticInverse);
+                    Populate("sum-tones", result.SumTones);
+                    Populate("difference-tones", result.DifferenceTones);
+                }
+            });
+        });
+    };
+
+</script>

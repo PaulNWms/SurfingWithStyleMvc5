@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/X-Mens-Morris");
+}
+
+<div class="row">
+    <div class="svg-parent col-sm-offset-3 col-sm-6">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+             style="width:500px; height:300px;"
+             viewBox="0 0 500 300"
+             preserveAspectRatio="xMidYMid slice">
+            <rect x="0" y="0" width="500" height="300" style="fill: #000000"></rect>
+            <circle cx="150" cy="50" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="250" cy="50" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="350" cy="50" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="150" cy="150" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="250" cy="150" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="350" cy="150" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="150" cy="250" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="250" cy="250" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <circle cx="350" cy="250" r="3" style="stroke: #ffffff; stroke-width:5"></circle>
+            <line x1="150" y1="50" x2="350" y2="50" style="stroke: #ffffff; stroke-width:3"></line>
+            <line x1="150" y1="150" x2="350" y2="150" style="stroke: #ffffff; stroke-width:3"></line>
+            <line x1="150" y1="250" x2="350" y2="250" style="stroke: #ffffff; stroke-width:3"></line>
+            <line x1="150" y1="50" x2="150" y2="250" style="stroke: #ffffff; stroke-width:3"></line>
+            <line x1="250" y1="50" x2="250" y2="250" style="stroke: #ffffff; stroke-width:3"></line>
+            <line x1="350" y1="50" x2="350" y2="250" style="stroke: #ffffff; stroke-width:3"></line>
+            <line x1="150" y1="50" x2="350" y2="250" style="stroke: #ffffff; stroke-width:3"></line>
+            <line x1="150" y1="250" x2="350" y2="50" style="stroke: #ffffff; stroke-width:3"></line>
+        </svg>
+    </div>
+</div>
+
+<button type="button" class="reset btn btn-primary btn-lg" data-toggle="modal">Reset</button>
+
+<div class="gameover modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Game Over</h4>
+            </div>
+            <div class="gameover-body modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-primary" data-dismiss="modal">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="thinking modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Thinking...
+            </div>
+        </div>
+    </div>
+</div>

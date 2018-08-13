@@ -1,0 +1,58 @@
+﻿@model SurfingWithStyleMvc5.ViewModels.TimerViewModel
+@{
+    ViewBag.Title = "Timer";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/TimerLib")
+    @Scripts.Render("~/bundles/Timer")
+}
+
+@section head {
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Oven timer / egg timer / tomato timer." />
+}
+
+<article class="narrow-article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebApplication">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <meta itemprop="applicationCategory" content="Tool, Multimedia" />
+    <meta itemprop="applicationSubCategory" content="Time Management" />
+    <meta itemprop="operatingSystem" content="IIS/ASP.NET MVC" />
+    <h2 itemprop="name">Timer</h2>
+    <div class="jumbotron text-center">
+        <h1>
+            <button type="button" class="btn btn-primary btn-lg timer-start" disabled="disabled"><span class="glyphicon glyphicon-play" /></button>
+            <span class="timer-display">@Html.DisplayFor(m => m.FormattedDurationSeconds)</span>
+        </h1>
+    </div>
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(m => m.FormattedDuration, new { @class = "col-sm-2" })
+            @Html.TextBoxFor(m => m.FormattedDuration, new { @class = "col-sm-2 form-control duration-minutes" })
+        </div>
+        <div class="form-group">
+            @Html.ValidationMessageFor(m => m.FormattedDuration)
+        </div>
+    </div>
+    <p>Enter the timer duration, or choose one of the presets.</p>
+    <p>
+        <button class="btn btn-default btn-xs oneMin">1 min.</button>
+        <button class="btn btn-default btn-xs twoMin">2 min.</button>
+        <button class="btn btn-default btn-xs eggTimer">Egg Timer (3 min.)</button>
+        <button class="btn btn-default btn-xs fiveMin">5 min.</button>
+        <button class="btn btn-default btn-xs tenMin">10 min.</button>
+        <button class="btn btn-default btn-xs fifteenMin">15 min.</button>
+        <button class="btn btn-default btn-xs twentyMin">20 min.</button>
+        <button class="btn btn-default btn-xs tomatoTimer">Tomato Timer (25 min.)</button>
+        <button class="btn btn-default btn-xs thirtyMin">30 min.</button>
+        <button class="btn btn-default btn-xs fortyFiveMin">45 min.</button>
+        <button class="btn btn-default btn-xs oneHour">1 hour</button>
+    </p>
+</article>
+
+<audio class="bell" preload="auto">
+    <source src="~/Content/Audio/Bell.wav" type="audio/wav">
+    <source src="~/Content/Audio/Bell.mp3" type="audio/mp3">
+</audio>

@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Surfing With Style";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section head {
+    <meta name="description" content="A really important website that you should bookmark." />
+}
+
+<article class="home-page" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Article">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <h1 class="cover-heading" itemprop="headline">Surfing With Style</h1>
+    <p itemscope itemtype="http://schema.org/Photograph">
+        <meta itemprop="url" content="https://surfingwithstyle.com/Content/Images/surfboard-woody-424.jpg" />
+        <img src="~/Content/Images/surfboard-woody-424.jpg" alt="@ViewBag.Title" itemprop="image" class="splash-screen-image"/>
+    </p>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+</article>
+

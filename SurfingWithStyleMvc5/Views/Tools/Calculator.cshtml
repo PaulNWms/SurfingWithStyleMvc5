@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Calculator - as if your computer doesn't already have one.";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section scripts {
+    <script src="~/Scripts/Calculator/Calculator.js"></script>
+}
+
+@section head {
+    <meta name="description" content="Desktop calculator, written in TypeScript.  The JavaScript number implementation is so incredible, this one actually comes with a disclaimer." />
+    <link href="~/Content/Calculator.css" rel="stylesheet" />
+}
+
+<article class="narrow-article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebApplication">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <meta itemprop="applicationCategory" content="Tool, Multimedia" />
+    <meta itemprop="applicationSubCategory" content="Math" />
+    <meta itemprop="operatingSystem" content="IIS/ASP.NET MVC" />
+    <h1 class="calculator-title" itemprop="name">Desktop Calculator</h1>
+    <table class="calculator">
+        <tr><td class="display" colspan="5">0</td></tr>
+        <tr>
+            <td><button type="button" class="btn btn-default digit">←</button></td>
+            <td><button type="button" class="btn btn-default correctError">CE</button></td>
+            <td><button type="button" class="btn btn-default clear">C</button></td>
+            <td><button type="button" class="btn btn-default negate">±</button></td>
+            <td><button type="button" class="btn btn-default sqrt">√</button></td>
+        </tr>
+        <tr>
+            <td><button type="button" class="btn btn-default digit">7</button></td>
+            <td><button type="button" class="btn btn-default digit">8</button></td>
+            <td><button type="button" class="btn btn-default digit">9</button></td>
+            <td><button type="button" class="btn btn-default binaryOp">/</button></td>
+            <td><button type="button" class="btn btn-default percent">%</button></td>
+        </tr>
+        <tr>
+            <td><button type="button" class="btn btn-default digit">4</button></td>
+            <td><button type="button" class="btn btn-default digit">5</button></td>
+            <td><button type="button" class="btn btn-default digit">6</button></td>
+            <td><button type="button" class="btn btn-default binaryOp">*</button></td>
+            <td><button type="button" class="btn btn-default invert">1/x</button></td>
+        </tr>
+        <tr>
+            <td><button type="button" class="btn btn-default digit">1</button></td>
+            <td><button type="button" class="btn btn-default digit">2</button></td>
+            <td><button type="button" class="btn btn-default digit">3</button></td>
+            <td><button type="button" class="btn btn-default binaryOp">-</button></td>
+            <td rowspan="2"><button type="button" class="btn btn-default equals">=</button></td>
+        </tr>
+        <tr>
+            <td colspan="2"><button type="button" class="btn btn-default digit zero">0</button></td>
+            <td><button type="button" class="btn btn-default digit">.</button></td>
+            <td><button type="button" class="btn btn-default binaryOp">+</button></td>
+        </tr>
+    </table>
+    <p class="col-sm-offset-3" itemprop="description"><b>Disclaimer:</b> This calculator is for demonstration purposes only.</p>
+</article>

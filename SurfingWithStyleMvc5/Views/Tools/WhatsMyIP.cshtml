@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "What's My IP? | Surfing With Style";
+    ViewBag.FileCreated = File.GetCreationTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+    ViewBag.FileModified = File.GetLastWriteTimeUtc(this.Server.MapPath(this.VirtualPath)).ToString("o");
+}
+
+@section head {
+    <meta name="description" content="Displays your external IP address, including request header info." />
+}
+
+<article class="narrow-article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebApplication">
+    @{Html.RenderPartial("~/Views/Shared/_StructuredData.cshtml", ViewBag as object);}
+    <meta itemprop="applicationCategory" content="Tool" />
+    <meta itemprop="applicationSubCategory" content="Network" />
+    <meta itemprop="operatingSystem" content="IIS/ASP.NET MVC" />
+    <h1 itemprop="headline">IP Address: @Html.Encode(Request.UserHostAddress)</h1>
+    <br />
+    <h3>Request Headers:</h3>
+    @{
+        var orderedKeys = Request.Headers.AllKeys.OrderBy(k => k);
+
+        foreach (string key in orderedKeys)
+        {
+            <p>@Html.Encode(key) = @Html.Encode(Request.Headers[key])</p>
+        }
+    }
+</article>
+
